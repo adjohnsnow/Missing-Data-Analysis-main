@@ -1,0 +1,897 @@
+# Step 1:  Set the Working Directory  
+%cd C:\Users\INS
+
+# Step 2:  Import the required libraries, etc  
+import pandas as pd
+from pandas import DataFrame
+
+# Step 3:  Load the data into a Python dataset  
+retail = pd.read_csv ("Retail.csv")
+retail.info()
+
+# Step 4:  Treatment of Outliers in the variable 'Txns'  
+# Step 4a:  Treatment of Outliers in the variable 'Txns' (3-Sigma approach)  
+mu_Txns = retail ['Txns'].mean()
+sigma_Txns = retail ['Txns'].std()
+sigma_low_Txns = mu_Txns - 3*sigma_Txns
+sigma_high_Txns = mu_Txns + 3*sigma_Txns
+retail ['sigma_cap_Txns'] = retail ['Txns']
+retail ['sigma_cap_Txns'] [retail ['Txns'] < sigma_low_Txns] = sigma_low_Txns
+retail ['sigma_cap_Txns'] [retail ['Txns'] > sigma_high_Txns] = sigma_high_Txns
+
+# Step 4b:  Treatment of Outliers in the variable 'Txns' (IQR approach)  
+Q1_Txns = retail ['Txns'].quantile(0.25)
+Q3_Txns = retail ['Txns'].quantile(0.75)
+IQR_Txns = Q3_Txns - Q1_Txns
+iqr_low_Txns = Q1_Txns - 1.5*IQR_Txns
+iqr_high_Txns = Q3_Txns + 1.5*IQR_Txns
+retail ['iqr_cap_Txns'] = retail ['Txns']
+retail ['iqr_cap_Txns'] [retail ['Txns'] < iqr_low_Txns] = iqr_low_Txns
+retail ['iqr_cap_Txns'] [retail ['Txns'] > iqr_high_Txns] = iqr_high_Txns
+
+# Step 4c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Txns', ax=ax)
+ax.set_ylabel ('Txns')
+ax.set_title ('Txns -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_Txns', ax=ax)
+ax.set_ylabel ('(Capped) Txns')
+ax.set_title ('Txns -  after Outlier caps (3-Sigma approach)')
+
+# Step 4d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Txns', ax=ax)
+ax.set_ylabel ('Txns')
+ax.set_title ('Txns -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_Txns', ax=ax)
+ax.set_ylabel ('(Capped) Txns')
+ax.set_title ('Txns -  after Outlier caps (IQR approach)')
+
+# Step 4e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('Txns', ax=ax)
+ax.set_ylabel ('Txns')
+ax.set_title ('Txns -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_Txns', ax=ax)
+ax.set_ylabel ('(Capped) Txns')
+ax.set_title ('Txns -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_Txns', ax=ax)
+ax.set_ylabel ('(Capped) Txns')
+ax.set_title ('Txns -  after IQR caps')
+
+# Step 5:  Treatment of Outliers in the variable 'Stores'  
+# Step 5a:  Treatment of Outliers in the variable 'Stores' (3-Sigma approach)  
+mu_Stores = retail ['Stores'].mean()
+sigma_Stores = retail ['Stores'].std()
+sigma_low_Stores = mu_Stores - 3*sigma_Stores
+sigma_high_Stores = mu_Stores + 3*sigma_Stores
+retail ['sigma_cap_Stores'] = retail ['Stores']
+retail ['sigma_cap_Stores'] [retail ['Stores'] < sigma_low_Stores] = sigma_low_Stores
+retail ['sigma_cap_Stores'] [retail ['Stores'] > sigma_high_Stores] = sigma_high_Stores
+
+# Step 5b:  Treatment of Outliers in the variable 'Stores' (IQR approach)  
+Q1_Stores = retail ['Stores'].quantile(0.25)
+Q3_Stores = retail ['Stores'].quantile(0.75)
+IQR_Stores = Q3_Stores - Q1_Stores
+iqr_low_Stores = Q1_Stores - 1.5*IQR_Stores
+iqr_high_Stores = Q3_Stores + 1.5*IQR_Stores
+retail ['iqr_cap_Stores'] = retail ['Stores']
+retail ['iqr_cap_Stores'] [retail ['Stores'] < iqr_low_Stores] = iqr_low_Stores
+retail ['iqr_cap_Stores'] [retail ['Stores'] > iqr_high_Stores] = iqr_high_Stores
+
+# Step 5c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Stores', ax=ax)
+ax.set_ylabel ('Stores')
+ax.set_title ('Stores -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_Stores', ax=ax)
+ax.set_ylabel ('(Capped) Stores')
+ax.set_title ('Stores -  after Outlier caps (3-Sigma approach)')
+
+# Step 5d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Stores', ax=ax)
+ax.set_ylabel ('Stores')
+ax.set_title ('Stores -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_Stores', ax=ax)
+ax.set_ylabel ('(Capped) Stores')
+ax.set_title ('Stores -  after Outlier caps (IQR approach)')
+
+# Step 5e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('Stores', ax=ax)
+ax.set_ylabel ('Stores')
+ax.set_title ('Stores -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_Stores', ax=ax)
+ax.set_ylabel ('(Capped) Stores')
+ax.set_title ('Stores -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_Stores', ax=ax)
+ax.set_ylabel ('(Capped) Stores')
+ax.set_title ('Stores -  after IQR caps')
+
+# Step 6:  Treatment of Outliers in the variable 'AvgTxnValue'  
+# Step 6a:  Treatment of Outliers in the variable 'AvgTxnValue' (3-Sigma approach)  
+mu_AvgTxnValue = retail ['AvgTxnValue'].mean()
+sigma_AvgTxnValue = retail ['AvgTxnValue'].std()
+sigma_low_AvgTxnValue = mu_AvgTxnValue - 3*sigma_AvgTxnValue
+sigma_high_AvgTxnValue = mu_AvgTxnValue + 3*sigma_AvgTxnValue
+retail ['sigma_cap_AvgTxnValue'] = retail ['AvgTxnValue']
+retail ['sigma_cap_AvgTxnValue'] [retail ['AvgTxnValue'] < sigma_low_AvgTxnValue] = sigma_low_AvgTxnValue
+retail ['sigma_cap_AvgTxnValue'] [retail ['AvgTxnValue'] > sigma_high_AvgTxnValue] = sigma_high_AvgTxnValue
+
+# Step 6b:  Treatment of Outliers in the variable 'AvgTxnValue' (IQR approach)  
+Q1_AvgTxnValue = retail ['AvgTxnValue'].quantile(0.25)
+Q3_AvgTxnValue = retail ['AvgTxnValue'].quantile(0.75)
+IQR_AvgTxnValue = Q3_AvgTxnValue - Q1_AvgTxnValue
+iqr_low_AvgTxnValue = Q1_AvgTxnValue - 1.5*IQR_AvgTxnValue
+iqr_high_AvgTxnValue = Q3_AvgTxnValue + 1.5*IQR_AvgTxnValue
+retail ['iqr_cap_AvgTxnValue'] = retail ['AvgTxnValue']
+retail ['iqr_cap_AvgTxnValue'] [retail ['AvgTxnValue'] < iqr_low_AvgTxnValue] = iqr_low_AvgTxnValue
+retail ['iqr_cap_AvgTxnValue'] [retail ['AvgTxnValue'] > iqr_high_AvgTxnValue] = iqr_high_AvgTxnValue
+
+# Step 6c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgTxnValue', ax=ax)
+ax.set_ylabel ('AvgTxnValue')
+ax.set_title ('AvgTxnValue -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_AvgTxnValue', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnValue')
+ax.set_title ('AvgTxnValue -  after Outlier caps (3-Sigma approach)')
+
+# Step 6d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgTxnValue', ax=ax)
+ax.set_ylabel ('AvgTxnValue')
+ax.set_title ('AvgTxnValue -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_AvgTxnValue', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnValue')
+ax.set_title ('AvgTxnValue -  after Outlier caps (IQR approach)')
+
+# Step 6e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('AvgTxnValue', ax=ax)
+ax.set_ylabel ('AvgTxnValue')
+ax.set_title ('AvgTxnValue -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_AvgTxnValue', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnValue')
+ax.set_title ('AvgTxnValue -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_AvgTxnValue', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnValue')
+ax.set_title ('AvgTxnValue -  after IQR caps')
+
+# Step 7:  Treatment of Outliers in the variable 'AvgTxnSize'  
+# Step 7a:  Treatment of Outliers in the variable 'AvgTxnSize' (3-Sigma approach)  
+mu_AvgTxnSize = retail ['AvgTxnSize'].mean()
+sigma_AvgTxnSize = retail ['AvgTxnSize'].std()
+sigma_low_AvgTxnSize = mu_AvgTxnSize - 3*sigma_AvgTxnSize
+sigma_high_AvgTxnSize = mu_AvgTxnSize + 3*sigma_AvgTxnSize
+retail ['sigma_cap_AvgTxnSize'] = retail ['AvgTxnSize']
+retail ['sigma_cap_AvgTxnSize'] [retail ['AvgTxnSize'] < sigma_low_AvgTxnSize] = sigma_low_AvgTxnSize
+retail ['sigma_cap_AvgTxnSize'] [retail ['AvgTxnSize'] > sigma_high_AvgTxnSize] = sigma_high_AvgTxnSize
+
+# Step 7b:  Treatment of Outliers in the variable 'AvgTxnSize' (IQR approach)  
+Q1_AvgTxnSize = retail ['AvgTxnSize'].quantile(0.25)
+Q3_AvgTxnSize = retail ['AvgTxnSize'].quantile(0.75)
+IQR_AvgTxnSize = Q3_AvgTxnSize - Q1_AvgTxnSize
+iqr_low_AvgTxnSize = Q1_AvgTxnSize - 1.5*IQR_AvgTxnSize
+iqr_high_AvgTxnSize = Q3_AvgTxnSize + 1.5*IQR_AvgTxnSize
+retail ['iqr_cap_AvgTxnSize'] = retail ['AvgTxnSize']
+retail ['iqr_cap_AvgTxnSize'] [retail ['AvgTxnSize'] < iqr_low_AvgTxnSize] = iqr_low_AvgTxnSize
+retail ['iqr_cap_AvgTxnSize'] [retail ['AvgTxnSize'] > iqr_high_AvgTxnSize] = iqr_high_AvgTxnSize
+
+# Step 7c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgTxnSize', ax=ax)
+ax.set_ylabel ('AvgTxnSize')
+ax.set_title ('AvgTxnSize -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_AvgTxnSize', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnSize')
+ax.set_title ('AvgTxnSize -  after Outlier caps (3-Sigma approach)')
+
+# Step 7d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgTxnSize', ax=ax)
+ax.set_ylabel ('AvgTxnSize')
+ax.set_title ('AvgTxnSize -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_AvgTxnSize', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnSize')
+ax.set_title ('AvgTxnSize -  after Outlier caps (IQR approach)')
+
+# Step 7e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('AvgTxnSize', ax=ax)
+ax.set_ylabel ('AvgTxnSize')
+ax.set_title ('AvgTxnSize -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_AvgTxnSize', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnSize')
+ax.set_title ('AvgTxnSize -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_AvgTxnSize', ax=ax)
+ax.set_ylabel ('(Capped) AvgTxnSize')
+ax.set_title ('AvgTxnSize -  after IQR caps')
+
+# Step 8:  Treatment of Outliers in the variable 'AvgItems'  
+# Step 8a:  Treatment of Outliers in the variable 'AvgItems' (3-Sigma approach)  
+mu_AvgItems = retail ['AvgItems'].mean()
+sigma_AvgItems = retail ['AvgItems'].std()
+sigma_low_AvgItems = mu_AvgItems - 3*sigma_AvgItems
+sigma_high_AvgItems = mu_AvgItems + 3*sigma_AvgItems
+retail ['sigma_cap_AvgItems'] = retail ['AvgItems']
+retail ['sigma_cap_AvgItems'] [retail ['AvgItems'] < sigma_low_AvgItems] = sigma_low_AvgItems
+retail ['sigma_cap_AvgItems'] [retail ['AvgItems'] > sigma_high_AvgItems] = sigma_high_AvgItems
+
+# Step 8b:  Treatment of Outliers in the variable 'AvgItems' (IQR approach)  
+Q1_AvgItems = retail ['AvgItems'].quantile(0.25)
+Q3_AvgItems = retail ['AvgItems'].quantile(0.75)
+IQR_AvgItems = Q3_AvgItems - Q1_AvgItems
+iqr_low_AvgItems = Q1_AvgItems - 1.5*IQR_AvgItems
+iqr_high_AvgItems = Q3_AvgItems + 1.5*IQR_AvgItems
+retail ['iqr_cap_AvgItems'] = retail ['AvgItems']
+retail ['iqr_cap_AvgItems'] [retail ['AvgItems'] < iqr_low_AvgItems] = iqr_low_AvgItems
+retail ['iqr_cap_AvgItems'] [retail ['AvgItems'] > iqr_high_AvgItems] = iqr_high_AvgItems
+
+# Step 8c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgItems', ax=ax)
+ax.set_ylabel ('AvgItems')
+ax.set_title ('AvgItems -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_AvgItems', ax=ax)
+ax.set_ylabel ('(Capped) AvgItems')
+ax.set_title ('AvgItems -  after Outlier caps (3-Sigma approach)')
+
+# Step 8d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('AvgItems', ax=ax)
+ax.set_ylabel ('AvgItems')
+ax.set_title ('AvgItems -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_AvgItems', ax=ax)
+ax.set_ylabel ('(Capped) AvgItems')
+ax.set_title ('AvgItems -  after Outlier caps (IQR approach)')
+
+# Step 8e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('AvgItems', ax=ax)
+ax.set_ylabel ('AvgItems')
+ax.set_title ('AvgItems -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_AvgItems', ax=ax)
+ax.set_ylabel ('(Capped) AvgItems')
+ax.set_title ('AvgItems -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_AvgItems', ax=ax)
+ax.set_ylabel ('(Capped) AvgItems')
+ax.set_title ('AvgItems -  after IQR caps')
+
+# Step 9:  Treatment of Outliers in the variable 'MoB'  
+# Step 9a:  Treatment of Outliers in the variable 'MoB' (3-Sigma approach)  
+mu_MoB = retail ['MoB'].mean()
+sigma_MoB = retail ['MoB'].std()
+sigma_low_MoB = mu_MoB - 3*sigma_MoB
+sigma_high_MoB = mu_MoB + 3*sigma_MoB
+retail ['sigma_cap_MoB'] = retail ['MoB']
+retail ['sigma_cap_MoB'] [retail ['MoB'] < sigma_low_MoB] = sigma_low_MoB
+retail ['sigma_cap_MoB'] [retail ['MoB'] > sigma_high_MoB] = sigma_high_MoB
+
+# Step 9b:  Treatment of Outliers in the variable 'MoB' (IQR approach)  
+Q1_MoB = retail ['MoB'].quantile(0.25)
+Q3_MoB = retail ['MoB'].quantile(0.75)
+IQR_MoB = Q3_MoB - Q1_MoB
+iqr_low_MoB = Q1_MoB - 1.5*IQR_MoB
+iqr_high_MoB = Q3_MoB + 1.5*IQR_MoB
+retail ['iqr_cap_MoB'] = retail ['MoB']
+retail ['iqr_cap_MoB'] [retail ['MoB'] < iqr_low_MoB] = iqr_low_MoB
+retail ['iqr_cap_MoB'] [retail ['MoB'] > iqr_high_MoB] = iqr_high_MoB
+
+# Step 9c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('MoB', ax=ax)
+ax.set_ylabel ('MoB')
+ax.set_title ('MoB -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_MoB', ax=ax)
+ax.set_ylabel ('(Capped) MoB')
+ax.set_title ('MoB -  after Outlier caps (3-Sigma approach)')
+
+# Step 9d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('MoB', ax=ax)
+ax.set_ylabel ('MoB')
+ax.set_title ('MoB -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_MoB', ax=ax)
+ax.set_ylabel ('(Capped) MoB')
+ax.set_title ('MoB -  after Outlier caps (IQR approach)')
+
+# Step 9e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('MoB', ax=ax)
+ax.set_ylabel ('MoB')
+ax.set_title ('MoB -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_MoB', ax=ax)
+ax.set_ylabel ('(Capped) MoB')
+ax.set_title ('MoB -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_MoB', ax=ax)
+ax.set_ylabel ('(Capped) MoB')
+ax.set_title ('MoB -  after IQR caps')
+
+# Step 10:  Treatment of Outliers in the variable 'PchActiveMths'  
+# Step 10a:  Treatment of Outliers in the variable 'PchActiveMths' (3-Sigma approach)  
+mu_PchActiveMths = retail ['PchActiveMths'].mean()
+sigma_PchActiveMths = retail ['PchActiveMths'].std()
+sigma_low_PchActiveMths = mu_PchActiveMths - 3*sigma_PchActiveMths
+sigma_high_PchActiveMths = mu_PchActiveMths + 3*sigma_PchActiveMths
+retail ['sigma_cap_PchActiveMths'] = retail ['PchActiveMths']
+retail ['sigma_cap_PchActiveMths'] [retail ['PchActiveMths'] < sigma_low_PchActiveMths] = sigma_low_PchActiveMths
+retail ['sigma_cap_PchActiveMths'] [retail ['PchActiveMths'] > sigma_high_PchActiveMths] = sigma_high_PchActiveMths
+
+# Step 10b:  Treatment of Outliers in the variable 'PchActiveMths' (IQR approach)  
+Q1_PchActiveMths = retail ['PchActiveMths'].quantile(0.25)
+Q3_PchActiveMths = retail ['PchActiveMths'].quantile(0.75)
+IQR_PchActiveMths = Q3_PchActiveMths - Q1_PchActiveMths
+iqr_low_PchActiveMths = Q1_PchActiveMths - 1.5*IQR_PchActiveMths
+iqr_high_PchActiveMths = Q3_PchActiveMths + 1.5*IQR_PchActiveMths
+retail ['iqr_cap_PchActiveMths'] = retail ['PchActiveMths']
+retail ['iqr_cap_PchActiveMths'] [retail ['PchActiveMths'] < iqr_low_PchActiveMths] = iqr_low_PchActiveMths
+retail ['iqr_cap_PchActiveMths'] [retail ['PchActiveMths'] > iqr_high_PchActiveMths] = iqr_high_PchActiveMths
+
+# Step 10c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('PchActiveMths', ax=ax)
+ax.set_ylabel ('PchActiveMths')
+ax.set_title ('PchActiveMths -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_PchActiveMths', ax=ax)
+ax.set_ylabel ('(Capped) PchActiveMths')
+ax.set_title ('PchActiveMths -  after Outlier caps (3-Sigma approach)')
+
+# Step 10d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('PchActiveMths', ax=ax)
+ax.set_ylabel ('PchActiveMths')
+ax.set_title ('PchActiveMths -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_PchActiveMths', ax=ax)
+ax.set_ylabel ('(Capped) PchActiveMths')
+ax.set_title ('PchActiveMths -  after Outlier caps (IQR approach)')
+
+# Step 10e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('PchActiveMths', ax=ax)
+ax.set_ylabel ('PchActiveMths')
+ax.set_title ('PchActiveMths -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_PchActiveMths', ax=ax)
+ax.set_ylabel ('(Capped) PchActiveMths')
+ax.set_title ('PchActiveMths -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_PchActiveMths', ax=ax)
+ax.set_ylabel ('(Capped) PchActiveMths')
+ax.set_title ('PchActiveMths -  after IQR caps')
+
+# Step 11:  Treatment of Outliers in the variable 'PromoSales'  
+# Step 11a:  Treatment of Outliers in the variable 'PromoSales' (3-Sigma approach)  
+mu_PromoSales = retail ['PromoSales'].mean()
+sigma_PromoSales = retail ['PromoSales'].std()
+sigma_low_PromoSales = mu_PromoSales - 3*sigma_PromoSales
+sigma_high_PromoSales = mu_PromoSales + 3*sigma_PromoSales
+retail ['sigma_cap_PromoSales'] = retail ['PromoSales']
+retail ['sigma_cap_PromoSales'] [retail ['PromoSales'] < sigma_low_PromoSales] = sigma_low_PromoSales
+retail ['sigma_cap_PromoSales'] [retail ['PromoSales'] > sigma_high_PromoSales] = sigma_high_PromoSales
+
+# Step 11b:  Treatment of Outliers in the variable 'PromoSales' (IQR approach)  
+Q1_PromoSales = retail ['PromoSales'].quantile(0.25)
+Q3_PromoSales = retail ['PromoSales'].quantile(0.75)
+IQR_PromoSales = Q3_PromoSales - Q1_PromoSales
+iqr_low_PromoSales = Q1_PromoSales - 1.5*IQR_PromoSales
+iqr_high_PromoSales = Q3_PromoSales + 1.5*IQR_PromoSales
+retail ['iqr_cap_PromoSales'] = retail ['PromoSales']
+retail ['iqr_cap_PromoSales'] [retail ['PromoSales'] < iqr_low_PromoSales] = iqr_low_PromoSales
+retail ['iqr_cap_PromoSales'] [retail ['PromoSales'] > iqr_high_PromoSales] = iqr_high_PromoSales
+
+# Step 11c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('PromoSales', ax=ax)
+ax.set_ylabel ('PromoSales')
+ax.set_title ('PromoSales -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_PromoSales', ax=ax)
+ax.set_ylabel ('(Capped) PromoSales')
+ax.set_title ('PromoSales -  after Outlier caps (3-Sigma approach)')
+
+# Step 11d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('PromoSales', ax=ax)
+ax.set_ylabel ('PromoSales')
+ax.set_title ('PromoSales -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_PromoSales', ax=ax)
+ax.set_ylabel ('(Capped) PromoSales')
+ax.set_title ('PromoSales -  after Outlier caps (IQR approach)')
+
+# Step 11e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('PromoSales', ax=ax)
+ax.set_ylabel ('PromoSales')
+ax.set_title ('PromoSales -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_PromoSales', ax=ax)
+ax.set_ylabel ('(Capped) PromoSales')
+ax.set_title ('PromoSales -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_PromoSales', ax=ax)
+ax.set_ylabel ('(Capped) PromoSales')
+ax.set_title ('PromoSales -  after IQR caps')
+
+# Step 12:  Treatment of Outliers in the variable 'HHSize'  
+# Step 12a:  Treatment of Outliers in the variable 'HHSize' (3-Sigma approach)  
+mu_HHSize = retail ['HHSize'].mean()
+sigma_HHSize = retail ['HHSize'].std()
+sigma_low_HHSize = mu_HHSize - 3*sigma_HHSize
+sigma_high_HHSize = mu_HHSize + 3*sigma_HHSize
+retail ['sigma_cap_HHSize'] = retail ['HHSize']
+retail ['sigma_cap_HHSize'] [retail ['HHSize'] < sigma_low_HHSize] = sigma_low_HHSize
+retail ['sigma_cap_HHSize'] [retail ['HHSize'] > sigma_high_HHSize] = sigma_high_HHSize
+
+# Step 12b:  Treatment of Outliers in the variable 'HHSize' (IQR approach)  
+Q1_HHSize = retail ['HHSize'].quantile(0.25)
+Q3_HHSize = retail ['HHSize'].quantile(0.75)
+IQR_HHSize = Q3_HHSize - Q1_HHSize
+iqr_low_HHSize = Q1_HHSize - 1.5*IQR_HHSize
+iqr_high_HHSize = Q3_HHSize + 1.5*IQR_HHSize
+retail ['iqr_cap_HHSize'] = retail ['HHSize']
+retail ['iqr_cap_HHSize'] [retail ['HHSize'] < iqr_low_HHSize] = iqr_low_HHSize
+retail ['iqr_cap_HHSize'] [retail ['HHSize'] > iqr_high_HHSize] = iqr_high_HHSize
+
+# Step 12c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('HHSize', ax=ax)
+ax.set_ylabel ('HHSize')
+ax.set_title ('HHSize -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_HHSize', ax=ax)
+ax.set_ylabel ('(Capped) HHSize')
+ax.set_title ('HHSize -  after Outlier caps (3-Sigma approach)')
+
+# Step 12d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('HHSize', ax=ax)
+ax.set_ylabel ('HHSize')
+ax.set_title ('HHSize -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_HHSize', ax=ax)
+ax.set_ylabel ('(Capped) HHSize')
+ax.set_title ('HHSize -  after Outlier caps (IQR approach)')
+
+# Step 12e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('HHSize', ax=ax)
+ax.set_ylabel ('HHSize')
+ax.set_title ('HHSize -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_HHSize', ax=ax)
+ax.set_ylabel ('(Capped) HHSize')
+ax.set_title ('HHSize -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_HHSize', ax=ax)
+ax.set_ylabel ('(Capped) HHSize')
+ax.set_title ('HHSize -  after IQR caps')
+
+# Step 13:  Treatment of Outliers in the variable 'Age'  
+# Step 13a:  Treatment of Outliers in the variable 'Age' (3-Sigma approach)  
+mu_Age = retail ['Age'].mean()
+sigma_Age = retail ['Age'].std()
+sigma_low_Age = mu_Age - 3*sigma_Age
+sigma_high_Age = mu_Age + 3*sigma_Age
+retail ['sigma_cap_Age'] = retail ['Age']
+retail ['sigma_cap_Age'] [retail ['Age'] < sigma_low_Age] = sigma_low_Age
+retail ['sigma_cap_Age'] [retail ['Age'] > sigma_high_Age] = sigma_high_Age
+
+# Step 13b:  Treatment of Outliers in the variable 'Age' (IQR approach)  
+Q1_Age = retail ['Age'].quantile(0.25)
+Q3_Age = retail ['Age'].quantile(0.75)
+IQR_Age = Q3_Age - Q1_Age
+iqr_low_Age = Q1_Age - 1.5*IQR_Age
+iqr_high_Age = Q3_Age + 1.5*IQR_Age
+retail ['iqr_cap_Age'] = retail ['Age']
+retail ['iqr_cap_Age'] [retail ['Age'] < iqr_low_Age] = iqr_low_Age
+retail ['iqr_cap_Age'] [retail ['Age'] > iqr_high_Age] = iqr_high_Age
+
+# Step 13c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Age', ax=ax)
+ax.set_ylabel ('Age')
+ax.set_title ('Age -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_Age', ax=ax)
+ax.set_ylabel ('(Capped) Age')
+ax.set_title ('Age -  after Outlier caps (3-Sigma approach)')
+
+# Step 13d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Age', ax=ax)
+ax.set_ylabel ('Age')
+ax.set_title ('Age -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_Age', ax=ax)
+ax.set_ylabel ('(Capped) Age')
+ax.set_title ('Age -  after Outlier caps (IQR approach)')
+
+# Step 13e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('Age', ax=ax)
+ax.set_ylabel ('Age')
+ax.set_title ('Age -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_Age', ax=ax)
+ax.set_ylabel ('(Capped) Age')
+ax.set_title ('Age -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_Age', ax=ax)
+ax.set_ylabel ('(Capped) Age')
+ax.set_title ('Age -  after IQR caps')
+
+# Step 14:  Treatment of Outliers in the variable 'Distance'  
+# Step 14a:  Treatment of Outliers in the variable 'Distance' (3-Sigma approach)  
+mu_Distance = retail ['Distance'].mean()
+sigma_Distance = retail ['Distance'].std()
+sigma_low_Distance = mu_Distance - 3*sigma_Distance
+sigma_high_Distance = mu_Distance + 3*sigma_Distance
+retail ['sigma_cap_Distance'] = retail ['Distance']
+retail ['sigma_cap_Distance'] [retail ['Distance'] < sigma_low_Distance] = sigma_low_Distance
+retail ['sigma_cap_Distance'] [retail ['Distance'] > sigma_high_Distance] = sigma_high_Distance
+
+# Step 14b:  Treatment of Outliers in the variable 'Distance' (IQR approach)  
+Q1_Distance = retail ['Distance'].quantile(0.25)
+Q3_Distance = retail ['Distance'].quantile(0.75)
+IQR_Distance = Q3_Distance - Q1_Distance
+iqr_low_Distance = Q1_Distance - 1.5*IQR_Distance
+iqr_high_Distance = Q3_Distance + 1.5*IQR_Distance
+retail ['iqr_cap_Distance'] = retail ['Distance']
+retail ['iqr_cap_Distance'] [retail ['Distance'] < iqr_low_Distance] = iqr_low_Distance
+retail ['iqr_cap_Distance'] [retail ['Distance'] > iqr_high_Distance] = iqr_high_Distance
+
+# Step 14c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Distance', ax=ax)
+ax.set_ylabel ('Distance')
+ax.set_title ('Distance -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_Distance', ax=ax)
+ax.set_ylabel ('(Capped) Distance')
+ax.set_title ('Distance -  after Outlier caps (3-Sigma approach)')
+
+# Step 14d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Distance', ax=ax)
+ax.set_ylabel ('Distance')
+ax.set_title ('Distance -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_Distance', ax=ax)
+ax.set_ylabel ('(Capped) Distance')
+ax.set_title ('Distance -  after Outlier caps (IQR approach)')
+
+# Step 14e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('Distance', ax=ax)
+ax.set_ylabel ('Distance')
+ax.set_title ('Distance -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_Distance', ax=ax)
+ax.set_ylabel ('(Capped) Distance')
+ax.set_title ('Distance -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_Distance', ax=ax)
+ax.set_ylabel ('(Capped) Distance')
+ax.set_title ('Distance -  after IQR caps')
+
+# Step 15:  Treatment of Outliers in the variable 'Sales'  
+# Step 15a:  Treatment of Outliers in the variable 'Sales' (3-Sigma approach)  
+mu_Sales = retail ['Sales'].mean()
+sigma_Sales = retail ['Sales'].std()
+sigma_low_Sales = mu_Sales - 3*sigma_Sales
+sigma_high_Sales = mu_Sales + 3*sigma_Sales
+retail ['sigma_cap_Sales'] = retail ['Sales']
+retail ['sigma_cap_Sales'] [retail ['Sales'] < sigma_low_Sales] = sigma_low_Sales
+retail ['sigma_cap_Sales'] [retail ['Sales'] > sigma_high_Sales] = sigma_high_Sales
+
+# Step 15b:  Treatment of Outliers in the variable 'Sales' (IQR approach)  
+Q1_Sales = retail ['Sales'].quantile(0.25)
+Q3_Sales = retail ['Sales'].quantile(0.75)
+IQR_Sales = Q3_Sales - Q1_Sales
+iqr_low_Sales = Q1_Sales - 1.5*IQR_Sales
+iqr_high_Sales = Q3_Sales + 1.5*IQR_Sales
+retail ['iqr_cap_Sales'] = retail ['Sales']
+retail ['iqr_cap_Sales'] [retail ['Sales'] < iqr_low_Sales] = iqr_low_Sales
+retail ['iqr_cap_Sales'] [retail ['Sales'] > iqr_high_Sales] = iqr_high_Sales
+
+# Step 15c:  Visualize the effect of (3-Sigma) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Sales', ax=ax)
+ax.set_ylabel ('Sales')
+ax.set_title ('Sales -  before Outlier caps (3-Sigma approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('sigma_cap_Sales', ax=ax)
+ax.set_ylabel ('(Capped) Sales')
+ax.set_title ('Sales -  after Outlier caps (3-Sigma approach)')
+
+# Step 15d:  Visualize the effect of (IQR) Outlier caps  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 2, 1)
+retail.boxplot ('Sales', ax=ax)
+ax.set_ylabel ('Sales')
+ax.set_title ('Sales -  before Outlier caps (IQR approach)')
+ax = fig.add_subplot (1, 2, 2)
+retail.boxplot ('iqr_cap_Sales', ax=ax)
+ax.set_ylabel ('(Capped) Sales')
+ax.set_title ('Sales -  after Outlier caps (IQR approach)')
+
+# Step 15e:  Compare the effects of the 3-Sigma and the IQR approaches  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (1, 3, 1)
+retail.boxplot ('Sales', ax=ax)
+ax.set_ylabel ('Sales')
+ax.set_title ('Sales -  before Outlier caps')
+ax = fig.add_subplot (1, 3, 2)
+retail.boxplot ('sigma_cap_Sales', ax=ax)
+ax.set_ylabel ('(Capped) Sales')
+ax.set_title ('Sales -  after 3-Sigma caps')
+ax = fig.add_subplot (1, 3, 3)
+retail.boxplot ('iqr_cap_Sales', ax=ax)
+ax.set_ylabel ('(Capped) Sales')
+ax.set_title ('Sales -  after IQR caps')
+######################################################################
+# Step 16:  Explore the data to detect variables with Missing Values  
+# Step 16a:  Create an array with the names for the various (native) variables  
+features = ['Txns', 'Stores', 'AvgTxnValue', 'AvgTxnSize', 'AvgItems', 'MoB', 'PchActiveMths', 'PromoSales', 'Gender', 'HHOwn', 'HHType', 'HHSize', 'Age', 'Distance', 'Sales']
+
+# Step 16b:  Detect the variables with Missing Values  
+rows = zeros (len (features))
+blanks = zeros (len (features))
+filled = zeros (len (features))
+for i in arange (len (features)):
+	rows [i] = len (retail [features [i]])
+	blanks [i] = len (retail [features [i]] [retail [features [i]].isnull()])
+	filled [i] = rows [i] - blanks [i]
+
+# Step 16c:  Tabulate the status of Missing Values for the various variables  
+MissingValueTracker = DataFrame()
+MissingValueTracker ['Features'] = features
+MissingValueTracker ['Observations'] = rows
+MissingValueTracker ['Available'] = filled
+MissingValueTracker ['Missing'] = blanks
+MissingValueTracker ['Observations (%)'] = 100 * rows / rows
+MissingValueTracker ['Available (%)'] = 100 * filled / rows
+MissingValueTracker ['Missing (%)'] = 100 * blanks / rows
+MissingValueTracker.to_csv ("Retail_Missing Value Tracker.csv")
+
+# Step 16d:  Display the status of Missing Values for the various variables  
+print 'Missing Value Tracker:'
+print MissingValueTracker
+print ''
+
+# Step 17:  Treatment of Missing Values in the variable 'HHSize'  
+# Step 17a:  Treatment of Missing Values in the variable 'HHSize' (post 3-Sigma Outlier caps)  
+median_sigma_cap_HHSize = retail ['sigma_cap_HHSize'].median()
+retail ['imp_sigma_cap_HHSize'] = retail ['sigma_cap_HHSize']
+retail ['imp_sigma_cap_HHSize'] [retail ['sigma_cap_HHSize'].isnull()] = median_sigma_cap_HHSize
+
+# Step 17b:  Treatment of Missing Values in the variable 'HHSize' (post IQR Outlier caps)  
+median_iqr_cap_HHSize = retail ['iqr_cap_HHSize'].median()
+retail ['imp_iqr_cap_HHSize'] = retail ['iqr_cap_HHSize']
+retail ['imp_iqr_cap_HHSize'] [retail ['iqr_cap_HHSize'].isnull()] = median_iqr_cap_HHSize
+
+# Step 17c:  Visualize the effect of Missing Value imputation (post 3-Sigma Outlier caps)  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (3, 1, 1)
+ax.hist ('HHSize', data=retail [retail ['HHSize'].notnull()], bins=50, color='r', alpha=0.5, label='HHSize')
+ax.set_xlabel ('HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  native values')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 2)
+ax.hist ('sigma_cap_HHSize', data=retail [retail ['sigma_cap_HHSize'].notnull()], bins=50, color='g', alpha=0.5, label='(3-Sigma) Capped HHSize')
+ax.set_xlabel ('(3-Sigma) Capped HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  after (3-Sigma) Outlier caps')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 3)
+ax.hist ('imp_sigma_cap_HHSize', data=retail, bins=50, color='b', alpha=0.5, label='(Imputed) HHSize')
+ax.set_xlabel ('(Imputed) HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  after Missing-value imputation')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+
+# Step 17d:  Visualize the effect of Missing Value imputation (post IQR Outlier caps)  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (3, 1, 1)
+ax.hist ('HHSize', data=retail [retail ['HHSize'].notnull()], bins=50, color='r', alpha=0.5, label='HHSize')
+ax.set_xlabel ('HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  native values')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 2)
+ax.hist ('iqr_cap_HHSize', data=retail [retail ['iqr_cap_HHSize'].notnull()], bins=50, color='g', alpha=0.5, label='(IQR) Capped HHSize')
+ax.set_xlabel ('(IQR) Capped HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  after (IQR) Outlier caps')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 3)
+ax.hist ('imp_iqr_cap_HHSize', data=retail, bins=50, color='b', alpha=0.5, label='(Imputed) HHSize')
+ax.set_xlabel ('(Imputed) HHSize')
+ax.set_ylabel ('Frequency')
+ax.set_title ('HHSize distribution -  after Missing-value imputation')
+ax.set_xlim (0, 12)
+ax.set_ylim (0, 6000)
+ax.legend (loc='upper right')
+
+# Step 18:  Treatment of Missing Values in the variable 'Age'  
+# Step 18a:  Treatment of Missing Values in the variable 'Age' (post 3-Sigma Outlier caps)  
+mean_sigma_cap_Age = retail ['sigma_cap_Age'].mean()
+retail ['imp_sigma_cap_Age'] = retail ['sigma_cap_Age']
+retail ['imp_sigma_cap_Age'] [retail ['sigma_cap_Age'].isnull()] = mean_sigma_cap_Age
+
+# Step 18b:  Treatment of Missing Values in the variable 'Age' (post IQR Outlier caps)  
+mean_iqr_cap_Age = retail ['iqr_cap_Age'].mean()
+retail ['imp_iqr_cap_Age'] = retail ['iqr_cap_Age']
+retail ['imp_iqr_cap_Age'] [retail ['iqr_cap_Age'].isnull()] = mean_iqr_cap_Age
+
+# Step 18c:  Visualize the effect of Missing Value imputation (post 3-Sigma Outlier caps)  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (3, 1, 1)
+ax.hist ('Age', data=retail [retail ['Age'].notnull()], bins=50, color='r', alpha=0.5, label='Age')
+ax.set_xlabel ('Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  native values')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 2)
+ax.hist ('sigma_cap_Age', data=retail [retail ['sigma_cap_Age'].notnull()], bins=50, color='g', alpha=0.5, label='(3-Sigma) Capped Age')
+ax.set_xlabel ('(3-Sigma) Capped Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  after (3-Sigma) Outlier caps')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 3)
+ax.hist ('imp_sigma_cap_Age', data=retail, bins=50, color='b', alpha=0.5, label='(Imputed) Age')
+ax.set_xlabel ('(Imputed) Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  after Missing-value imputation')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+
+# Step 18d:  Visualize the effect of Missing Value imputation (post IQR Outlier caps)  
+fig = plt.figure()
+fig.subplots_adjust (wspace=0.4, hspace=0.4)
+ax = fig.add_subplot (3, 1, 1)
+ax.hist ('Age', data=retail [retail ['Age'].notnull()], bins=50, color='r', alpha=0.5, label='Age')
+ax.set_xlabel ('Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  native values')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 2)
+ax.hist ('iqr_cap_Age', data=retail [retail ['iqr_cap_Age'].notnull()], bins=50, color='g', alpha=0.5, label='(IQR) Capped Age')
+ax.set_xlabel ('(IQR) Capped Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  after (IQR) Outlier caps')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+ax = fig.add_subplot (3, 1, 3)
+ax.hist ('imp_iqr_cap_Age', data=retail, bins=50, color='b', alpha=0.5, label='(Imputed) Age')
+ax.set_xlabel ('(Imputed) Age')
+ax.set_ylabel ('Frequency')
+ax.set_title ('Age distribution -  after Missing-value imputation')
+ax.set_xlim (10, 70)
+ax.set_ylim (0, 1600)
+ax.legend (loc='upper right')
+
+# Step 19:  Preserve the modified dataset (post treatments of Outliers & Missing Values) for subsequent usage  
+retail.info()
+retail.to_csv ("(Prep'ed) Retail.csv")
